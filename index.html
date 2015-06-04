@@ -132,17 +132,138 @@ Casper.test.begin('Google test, find first h3 and select it', 1, function suite(
 });
 					</code></pre>
                         <aside class="notes">
-                            <p></p>
+                            <ul>
+                                <li>start the browser and navigate to url</li>
+                                <li>Fill out the form with CasperJS as the value</li>
+                                <li>Click the first result</li>
+                                <li>Validate the url is http://casperjs.org/</li>
+                            </ul>
                         </aside>
                     </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>Results</h2>
+                        <aside class="notes">
+                            <p>Come back as xunit payload if you're logging, or a colorful stdout</p>
+                        </aside>
+                    </section>
+                    <section>
+                        <h2>xunit</h2>
+                        <pre><code data-trim contenteditable>
+tsuites time="3.173">
+    <testsuite name="Google test, find first h3 and select it" tests="1" failures="0" errors="0" time="3.173" timestamp="2015-06-04T03:27:10.830Z" package="./siteTests/google">
+        <testcase name="Current url matches the provided pattern" classname="./siteTests/google" time="3.173"></testcase>
+        <system-out></system-out>
+    </testsuite>
+</testsuites>
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h2>stdout</h2>
+                        <img src="img/casperOutput.png">    
+                    </section>
 				</section>
+                <section>
+                    <section>
+                        <h2>Transaction Monitoring Code</h2>
+                    </section>
+                    <section>
+                        <h4>Returning a monitoring payload</h4>
+                        <pre><code data-trim contenteditable>
+server.route({
+    method: 'GET',
+    path: '/checks/{name}',
+    handler: function (request, reply) {
+        console.log(request.params.name);
+        var spawn = require('child_process').spawn,
+        start = new Date();
+        casper = spawn('casperjs', ['test', './siteTests/' + request.params.name + '.js']);
+        casper.stdout.on('data', function (data) {
+            console.log('' + data);
+        });
+
+        casper.on('exit', function(code){
+            end = new Date()
+            elapsed = (end - start) / 1000
+            if(code == 0){
+                rdata = '<pingdom_http_custom_check><status>ok</status><response_time>' + elapsed + '</response_time></pingdom_http_custom_check>';
+            }
+            else{
+                rdata = '<pingdom_http_custom_check><status>down</status><response_time>' + elapsed + '</response_time></pingdom_http_custom_check>';
+            }
+            reply(rdata).type('text/xml');
+        });
+    }
+});
+                        </code></pre>
+                    </section>
+                    <section>
+                        <h4>Backend for Test Harness</h4>
+                        <pre><code>
+server.route({
+    method: 'GET',
+    path: '/harness/{name}',
+    handler: function (request, reply) {
+        console.log(request.params.name);
+        var spawn = require('child_process').spawn,
+        output = []
+        casper = spawn('casperjs', ['test', './siteTests/' + request.params.name + '.js', '--xunit=./results/' + request.params.name + '.log']);
+        casper.stdout.on('data', function (data) {
+            console.log('' + data);
+            output.push('' + data);
+        });
+
+        casper.on('exit', function(code){
+            fs.readFile('./results/' + request.params.name + '.log', function(err, data){
+                reply(data).type('text/xml');
+            });
+        });
+    }
+});
+                        </code></pre>
+                    </section>
+                </section>
+                <section>
+                    <section>
+                        <h2>What Comes Next?</h2>
+                    </section>
+                    <section>
+                        <h2>Creating Checks Through The Application</h2>
+                        <pre><code>
+server.route({
+    method: 'POST',
+    path: '/api/1.0/check/add',
+    handler: function (request, reply) {
+        check.add(request.payload);
+        reply(request.payload);
+    },
+    config: {
+        validate: {
+            payload: {
+                check: Joi.string().required(),
+                url: Joi.string().required(),
+                transaction: Joi.array().includes(Joi.object().keys({
+                    action: Joi.string().valid(["present","validate","click", "fill"]).required(),
+                    selector: Joi.string().required(),
+                    text: Joi.string()
+                })).required(),
+            }
+        }
+    }
+});
+                        </code></pre>
+                    </section>
+                </section>
 
 				<section>
 					<h1>THE END</h1>
-					<p>
-						- <a href="http://github.com/waldronj/kcdc2015">Presentation / Slides</a> <br>
-						- <a href="https://github.com/waldronj/transactionmonitoring">Transaction Monitoring App</a>
-					</p>
+                    <ul>
+                        <li><a href="http://thejwal-kcdc.cloudapp.net">Demo site</a></li>
+                        <li><a href="http://docs.casperjs.org/en/latest/modules/index.html">CasperJS API</a></li>
+                        <li><a href="http://docs.casperjs.org/en/latest/testing.html">CasperJS Test Framework</a></li>
+                        <li><a href="https://www.npmjs.com/package/hapi">HapiJS</a></li>
+                    </ul>
 				</section>
 
 			</div>
