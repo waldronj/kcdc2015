@@ -1,1 +1,1 @@
-open file:///Users/jwaldron/code/presentation/kcdc2015/index.html http://docs.casperjs.org/en/latest/modules/tester.html http://docs.casperjs.org/en/latest/modules/index.html http://thejwal-kcdc.cloudapp.net/harness
+open file:///Users/jwaldron/code/presentation/kcdc2015/index.html http://docs.casperjs.org/en/latest/modules/index.html http://docs.casperjs.org/en/latest/modules/tester.html http://thejwal-kcdc.cloudapp.net/harness

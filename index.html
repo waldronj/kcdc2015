@@ -44,13 +44,18 @@
 					<h1>CasperJS</h1>
 					<h3>Can make Any Team Hapi</h3>
 					<p>
-						<small>Created by <a href="http://thejwal.com">Josh Waldron</a> / <a href="http://twitter.com/thejwaldev">@thejwalDev</a></small>
+						<small><a href="http://thejwal.com">Josh Waldron</a> / <a href="http://twitter.com/thejwaldev">@thejwalDev</a></small>
 					</p>
 				</section>
 
 				<section>
                     <section>
                         <h2>About Me</h2>
+                        <ul>
+                            <li>Husband, Father, Developer, Student</li>
+                            <li>Computer needs to do work</li>
+                            <li>development style</li>
+                        </ul>
                         <aside class="notes">
                             <ul>
                                 <li>Husband, Father, Developer, Student</li>
@@ -62,35 +67,48 @@
                     </section>
 				</section>
 				<section>
-					<section>
-						<h2>The Problem<h2>
-                        <aside class="notes">
-                            <p>Users are unpredictable, we need to make sure at a bare minimum that our applications can follow a happy path and function as intended.</p>
-                            <p>As developers we want to deploy our code to an environment and run a test to ensure the application is functioning correctly, not wait on $QAPerson to test</p>
-                            <p>We want our tests to be the same in every environment, there's nothing more frustating than changing your test plan just because you changed environments.</p>
-                        </aside>
-					</section>
-					<section data-background="http://i.giphy.com/90F8aUepslB84.gif">
-						<h2>Automating Users</h2>
-					</section>
-
-					<section>
-						<h2>What purpose does it solve?</h2>
+                    <h2>The Problem</h2>
+                    <ul>
+                        <li>Deployments Validation</li>
+                        <li>Monitoring Sucks</li>
+                    </ul>
+                    <aside class="notes">
+                        <p>Users are unpredictable, we need to make sure at a bare minimum that our applications can follow a happy path and function as intended.</p>
+                        <p>As developers we want to deploy our code to an environment and run a test to ensure the application is functioning correctly, not wait on $QAPerson to test</p>
+                        <p>We want our tests to be the same in every environment, there's nothing more frustating than changing your test plan just because you changed environments.</p>
+                    </aside>
+                </section>
+                <section>
+                    <h2>Requirements to Solve Problem</h2>
+                    <ul>
+                        <li>Smoke Testing</li>
+                        <li>Monitoring</li>
+                        <li>Test Harness</li>
+                        <li>Same tests all environments</li>
+                    </ul>
+                    <aside class="notes">
+                     <ul>
+                        <li>Able to quickly tell if functionality of app has been broken without anyone intervening</li>
+                        <li>Can leverage these tests to provide a response to an external monitor</li>
+                        <li>Allow a QA type person to click on tests and see results which are repeatable and don't skip steps</li>
+                        <li>Validate the app the same way in every environment from Dev to Prod</li>
+                    </ul>                           
+                    </aside>
+                </section>
+                <section>
+                    <section>
+					    <h2>CasperJS</h2>
                         <ul>
-                            <li>Smoke Testing</li>
-                            <li>Monitoring</li>
-                            <li>Test Harness</li>
-                            <li>Same tests all environments</li>
+                            <li>Built on top of PhantomJS</li>
+                            <li>Thorough documentation</li>
+                            <li>CasperJS contains a testing API</li>
                         </ul>
                         <aside class="notes">
-                         <ul>
-                            <li>Able to quickly tell if functionality of app has been broken without anyone intervening</li>
-                            <li>Can leverage these tests to provide a response to an external monitor</li>
-                            <li>Allow a QA type person to click on tests and see results which are repeatable and don't skip steps</li>
-                            <li>Validate the app the same way in every environment from Dev to Prod</li>
-                        </ul>                           
+                            <p>PhantomJS is only a headless browser used for testing, casperjs is the test framework</p>
+                            <p>Documentation on CasperJS is extremely thorough, can literally spend all day / days on reading through the docs</p>
+                            <p>CasperJS has multiple api endpoints, one is a testing framework that will fail the casper run if a test fails, also provides xunit payload for logging the run</p>
                         </aside>
-					</section>
+                    </section>
                     <section>
                         <h2>Smoke Testing</h2>
                         <img src="img/smokeTest.png"/>
@@ -98,25 +116,6 @@
                             <ul>
                                 <li>Talk through the output, then fire up a terminal and show from command line how it works</li>
                                 <li>casperjs test presentation.js / in ~/code/node/transactionMonitoring/src/siteTests/</li>
-                            </ul>
-                        </aside>
-                    </section>
-                    <section>
-                        <h2>Monitoring</h2>
-                        <img src="img/monitoring.png"/>
-                        <aside class="notes">
-                            <ul>
-                                <li>This specific payload is one that Pingdom can ingest and determine if your check is up or down</li>
-                            </ul>
-                        </aside>
-                    </section>
-                    <section>
-                        <h2>Test Harness</h2>
-                        <img src="img/testHarness.png"/>
-                        <aside class="notes">
-                            <ul>
-                                <li>Using the test harness allows for the same repeatable steps to be done, without shortcuts</li>
-                                <li>Able to just click and read through XML payload to determine which step or steps failed.</li>
                             </ul>
                         </aside>
                     </section>
@@ -139,56 +138,35 @@ casper.test.begin('Live test to verify presentation slide contains thejwaldev', 
                         </code></pre>
                     </section>
 				</section>
-			    
-				<section>
-                    <section>
-					    <h2>CasperJS</h2>
-                        <ul>
-                            <li>Built on top of PhantomJS</li>
-                            <li>Thorough documentation</li>
-                            <li>CasperJS contains a testing API</li>
-                        </ul>
-                        <aside class="notes">
-                            <p>PhantomJS is only a headless browser used for testing, casperjs is the test framework</p>
-                            <p>Documentation on CasperJS is extremely thorough, can literally spend all day / days on reading through the docs</p>
-                            <p>CasperJS has multiple api endpoints, one is a testing framework that will fail the casper run if a test fails, also provides xunit payload for logging the run</p>
-                        </aside>
-                    </section>
-                </section>
                 <section>
                     <section>
-                        <h2>Let's look at some CasperJS code</h2>
-                    </section>
-                    <section>
-
-					<pre><code data-trim contenteditable>
-Casper.test.begin('Google test, find first h3 and select it', 1, function suite(test){
-    casper.start('http://google.fr/');
-
-    casper.thenEvaluate(function(term) {
-        document.querySelector('input[name="q"]').setAttribute('value', term);
-        document.querySelector('form[name="f"]').submit();
-    }, 'CasperJS');
-    
-    casper.then(function() {
-        this.click('h3.r a');
-    });
-
-    casper.then(function() {
-        test.assertUrlMatch("http://casperjs.org/")
-    });
-
-    casper.run(function(){
-        test.done();
-    });
-});
-					</code></pre>
+                        <h2>Transaction Monitoring</h2>
+                        <ul>
+                            <li>Lightweight Web App to solve my problems</li>
+                        </ul>
                         <aside class="notes">
                             <ul>
-                                <li>start the browser and navigate to url</li>
-                                <li>Fill out the form with CasperJS as the value</li>
-                                <li>Click the first result</li>
-                                <li>Validate the url is http://casperjs.org/</li>
+                                <li>Missing Monitoring / Test Harness</li>
+                                <li>Wanted it exposed to the internet so I needed a web framework, I wanted to be Hapi so I didn't choose Express (I veiw them as bad guys)</li>
+                            </ul>
+                        </aside>
+                    </section>
+                    <section>
+                        <h2>Monitoring</h2>
+                        <img src="img/monitoring.png"/>
+                        <aside class="notes">
+                            <ul>
+                                <li>This specific payload is one that Pingdom can ingest and determine if your check is up or down</li>
+                            </ul>
+                        </aside>
+                    </section>
+                    <section>
+                        <h2>Test Harness</h2>
+                        <img src="img/testHarness.png"/>
+                        <aside class="notes">
+                            <ul>
+                                <li>Using the test harness allows for the same repeatable steps to be done, without shortcuts</li>
+                                <li>Able to just click and read through XML payload to determine which step or steps failed.</li>
                             </ul>
                         </aside>
                     </section>
@@ -196,8 +174,12 @@ Casper.test.begin('Google test, find first h3 and select it', 1, function suite(
                 <section>
                     <section>
                         <h2>Results</h2>
+                        <ul>
+                            <li>Important to be able to tell what went wrong</li>
+                        </ul>
                         <aside class="notes">
                             <p>Come back as xunit payload if you're logging, or a colorful stdout</p>
+                            <p>If you don't have any output from your tests then why bother?</p>
                         </aside>
                     </section>
                     <section>
@@ -276,39 +258,7 @@ server.route({
                         </code></pre>
                     </section>
                 </section>
-                <section>
-                    <section>
-                        <h2>What Comes Next?</h2>
-                    </section>
-                    <section>
-                        <h2>Creating Checks Through The Application</h2>
-                        <pre><code>
-server.route({
-    method: 'POST',
-    path: '/api/1.0/check/add',
-    handler: function (request, reply) {
-        check.add(request.payload);
-        reply(request.payload);
-    },
-    config: {
-        validate: {
-            payload: {
-                check: Joi.string().required(),
-                url: Joi.string().required(),
-                transaction: Joi.array().includes(Joi.object().keys({
-                    action: Joi.string().valid(["present","validate","click", "fill"]).required(),
-                    selector: Joi.string().required(),
-                    text: Joi.string()
-                })).required(),
-            }
-        }
-    }
-});
-                        </code></pre>
-                    </section>
-                </section>
-
-				<section>
+			<section>
 					<h1>THE END</h1>
                     <ul>
                         <li><a href="http://thejwal-kcdc.cloudapp.net">Demo site</a></li>
