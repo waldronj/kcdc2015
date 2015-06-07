@@ -63,7 +63,12 @@
 				</section>
 				<section>
 					<section>
-						<h2>Transaction Monitoring</h2>
+						<h2>The Problem<h2>
+                        <aside class="notes">
+                            <p>Users are unpredictable, we need to make sure at a bare minimum that our applications can follow a happy path and function as intended.</p>
+                            <p>As developers we want to deploy our code to an environment and run a test to ensure the application is functioning correctly, not wait on $QAPerson to test</p>
+                            <p>We want our tests to be the same in every environment, there's nothing more frustating than changing your test plan just because you changed environments.</p>
+                        </aside>
 					</section>
 					<section data-background="http://i.giphy.com/90F8aUepslB84.gif">
 						<h2>Automating Users</h2>
@@ -86,6 +91,53 @@
                         </ul>                           
                         </aside>
 					</section>
+                    <section>
+                        <h2>Smoke Testing</h2>
+                        <img src="img/smokeTest.png"/>
+                        <aside class="notes">
+                            <ul>
+                                <li>Talk through the output, then fire up a terminal and show from command line how it works</li>
+                                <li>casperjs test presentation.js / in ~/code/node/transactionMonitoring/src/siteTests/</li>
+                            </ul>
+                        </aside>
+                    </section>
+                    <section>
+                        <h2>Monitoring</h2>
+                        <img src="img/monitoring.png"/>
+                        <aside class="notes">
+                            <ul>
+                                <li>This specific payload is one that Pingdom can ingest and determine if your check is up or down</li>
+                            </ul>
+                        </aside>
+                    </section>
+                    <section>
+                        <h2>Test Harness</h2>
+                        <img src="img/testHarness.png"/>
+                        <aside class="notes">
+                            <ul>
+                                <li>Using the test harness allows for the same repeatable steps to be done, without shortcuts</li>
+                                <li>Able to just click and read through XML payload to determine which step or steps failed.</li>
+                            </ul>
+                        </aside>
+                    </section>
+                    <section>
+                        <h2>Same Test Throughout Software Iteration</h2>
+                        <pre><code>
+casper.test.begin('Live test to verify presentation slide contains thejwaldev', 3, function suite(test){
+    casper.start('file:///Users/jwaldron/code/presenation/kcdc2015/index.html');
+
+    casper.then(function() {
+        test.assertTitle("KCDC2015 - Transaction Monitoring");
+        test.assertSelectorHasText("h1", "CasperJS");
+        test.assertSelectorHasText("p small", "thejwalDev");
+    });
+
+    casper.run(function(){
+        test.done();
+    });
+});
+                        </code></pre>
+                    </section>
 				</section>
 			    
 				<section>
