@@ -15,10 +15,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
 		<link rel="stylesheet" href="css/reveal.css">
-		<link rel="stylesheet" href="css/theme/serif.css" id="theme">
+		<link rel="stylesheet" href="css/theme/solarized.css" id="theme">
 
 		<!-- Code syntax highlighting -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<link rel="stylesheet" href="lib/css/solarized_light.css">
 
 		<!-- Printing and PDF exports -->
 		<script>
@@ -47,6 +47,9 @@
 						<small><a href="http://thejwal.com">Josh Waldron</a> / <a href="http://twitter.com/thejwaldev">@thejwalDev</a></small>
 					</p>
 				</section>
+                <section>
+                    <img src="img/sponsers.png"/>
+                </section>
 
 				<section>
                     <section>
@@ -143,6 +146,7 @@ casper.test.begin('Live test to verify presentation slide contains thejwaldev', 
                         <h2>Transaction Monitoring</h2>
                         <ul>
                             <li>Lightweight Web App to solve my problems</li>
+                            <li>Chose Hapi to spite Express</li>
                         </ul>
                         <aside class="notes">
                             <ul>
@@ -186,8 +190,8 @@ casper.test.begin('Live test to verify presentation slide contains thejwaldev', 
                     </section>
                     <section>
                         <h2>xunit</h2>
-                        <pre><code data-trim contenteditable>
-tsuites time="3.173">
+                        <pre><code>
+<testsuites time="3.173">
     <testsuite name="Google test, find first h3 and select it" tests="1" failures="0" errors="0" time="3.173" timestamp="2015-06-04T03:27:10.830Z" package="./siteTests/google">
         <testcase name="Current url matches the provided pattern" classname="./siteTests/google" time="3.173"></testcase>
         <system-out></system-out>
@@ -197,15 +201,17 @@ tsuites time="3.173">
                     </section>
                     <section>
                         <h2>stdout</h2>
-                        <img src="img/casperOutput.png">    
+                        <aside class="notes">
+                            <p>Fire up command prompt and show the stdout (cd ~/code/node/transactionmonitoring/)</p>
+                        <aside>
                     </section>
 				</section>
                 <section>
                     <section>
-                        <h2>Transaction Monitoring Code</h2>
+                        <h2>Under the Hood</h2>
                     </section>
                     <section>
-                        <h4>Returning a monitoring payload</h4>
+                        <h2>Returning a monitoring payload</h2>
                         <pre><code data-trim contenteditable>
 server.route({
     method: 'GET',
@@ -235,7 +241,7 @@ server.route({
                         </code></pre>
                     </section>
                     <section>
-                        <h4>Backend for Test Harness</h4>
+                        <h2>Backend for Test Harness</h2>
                         <pre><code>
 server.route({
     method: 'GET',
@@ -243,11 +249,9 @@ server.route({
     handler: function (request, reply) {
         console.log(request.params.name);
         var spawn = require('child_process').spawn,
-        output = []
         casper = spawn('casperjs', ['test', './siteTests/' + request.params.name + '.js', '--xunit=./results/' + request.params.name + '.log']);
         casper.stdout.on('data', function (data) {
             console.log('' + data);
-            output.push('' + data);
         });
 
         casper.on('exit', function(code){
@@ -260,13 +264,89 @@ server.route({
                         </code></pre>
                     </section>
                 </section>
+            <section>
+                <section>
+                    <h2>V2, what to do</h2>
+                </section>
+                <section>
+                    <h2>Add Check API Endpoint</h2>
+                    <pre><code>server.route({
+    method: 'POST',
+    path: '/api/1.0/check/add',
+    handler: function (request, reply) {
+        check.add(request.payload);
+        reply(request.payload);
+    },
+    config: {
+        validate: {
+            payload: {
+                check: Joi.string().required(),
+                url: Joi.string().required(),
+                transaction: Joi.array().includes(Joi.object().keys({
+                    action: Joi.string().valid(["present","validate","click", "fill"]).required(),
+                    selector: Joi.string().required(),
+                    text: Joi.string()
+                })).required(),
+            }
+        }
+    }
+});
+                    </code></pre>
+                </section>
+                <section>
+                    <h2>Javascript writing Javascript</h2>
+                    <pre><code>module.exports = {
+    add: function(json){
+        var casperTest = [];
+        casperTest.push(start(json["check"], json["transaction"].length, json["url"]));
+        for(var i in json["transaction"]){
+            var action = json["transaction"][i]["action"];
+            var selector = json["transaction"][i]["selector"];
+            var text = json["transaction"][i]["text"];
+            switch(action){
+                case "present":
+                    casperTest.push(present(selector));
+                    break;
+                case "validate":
+                    casperTest.push(validate(selector, text));
+                    break;
+                case "fill":
+                    casperTest.push(fill(selector, text));
+                    break;
+                case "click":
+                    casperTest.push(click(selector));
+                default:
+                    console.log("invalid action passed");
+            }
+        }
+        casperTest.push(end());
+        console.log(casperTest);
+        saveCheck(json["check"], casperTest);
+    },
+};
+
+function saveCheck(check, casperTest){
+    for(var i in casperTest){
+        console.log(casperTest[i]);
+        fs.appendFile("./siteTests/" + check + ".js", casperTest[i], function(err) {
+            if(err) return console.log(err);
+        });
+    }
+}</code></pre>
+                </section>
+                <section>
+                    <h2>What about a UI for that API backend?</h2>
+                </section>
+            </section>
+
 			<section>
-					<h1>Resources</h1>
+					<h2>Resources</h2>
                     <ul>
-                        <li><a href="http://thejwal-kcdc.cloudapp.net">Demo site</a></li>
                         <li><a href="http://docs.casperjs.org/en/latest/modules/index.html">CasperJS API</a></li>
                         <li><a href="http://docs.casperjs.org/en/latest/testing.html">CasperJS Test Framework</a></li>
                         <li><a href="https://www.npmjs.com/package/hapi">HapiJS</a></li>
+                        <li><a href="http://thejwal-kcdc.cloudapp.net:8080">Transaction Monitoring</a>
+                        <li><a href="https://github.com/waldronj/transactionMonitoring">Source Code</a>
                     </ul>
 				</section>
 
